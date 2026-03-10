@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Iterator
 
-from binary_counter.components.extension_detector import ExtensionDetector
+from binary_counter.components.extension_detector.base import ExtensionDetector
 from binary_counter.types import Point
 
 

@@ -1,7 +1,8 @@
+from binary_counter.components.extension_detector import ExtensionDetector
 from binary_counter.types import Point
 
 
-class ExtensionDetector:
+class AbsoluteDistanceExtensionDetector(ExtensionDetector):
     extension_threshold: float
 
     def __init__(self, extension_threshold: float) -> None:

@@ -1,7 +1,5 @@
 from binary_counter.adapters import MediaPipeHandAdapter
-from binary_counter.components.extension_detector.extension_detector import (
-    ExtensionDetector,
-)
+from binary_counter.components.extension_detector import ExtensionDetector
 
 
 class BinaryCounterEngine:

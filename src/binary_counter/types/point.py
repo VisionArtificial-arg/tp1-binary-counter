@@ -11,3 +11,6 @@ class Point:
         dx: float = self.x - other.x
         dy: float = self.y - other.y
         return math.hypot(dx, dy)
+
+    def norm(self) -> float:
+        return math.hypot(self.x, self.y)

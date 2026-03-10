@@ -3,7 +3,9 @@ import mediapipe.python.solutions.holistic as mp_holistic
 import mediapipe.python.solutions.drawing_utils as mp_drawing
 
 from binary_counter.adapters import MediaPipeHandAdapter
-from binary_counter.components.extension_detector import ExtensionDetector
+from binary_counter.components.extension_detector import (
+    RelativeDistanceExtensionDetector,
+)
 from binary_counter.engine import BinaryCounterEngine
 
 
@@ -15,7 +17,7 @@ RED_COLOR = (0, 0, 255)
 capture = cv2.VideoCapture(0)
 
 adapter = MediaPipeHandAdapter()
-detector = ExtensionDetector(0.10)
+detector = RelativeDistanceExtensionDetector(0.30)
 engine = BinaryCounterEngine(adapter, detector)
 
 
