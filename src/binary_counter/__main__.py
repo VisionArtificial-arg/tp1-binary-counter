@@ -4,9 +4,13 @@ import mediapipe.python.solutions.drawing_utils as mp_drawing
 
 from binary_counter.adapters import MediaPipeHandAdapter
 from binary_counter.components.extension_detector import (
-    RelativeDistanceExtensionDetector,
+    AbsoluteDistanceExtensionDetector,
 )
 from binary_counter.engine import BinaryCounterEngine
+
+
+def nothing(x):
+    pass
 
 
 holistic_model = mp_holistic.Holistic(
@@ -17,12 +21,27 @@ RED_COLOR = (0, 0, 255)
 capture = cv2.VideoCapture(0)
 
 adapter = MediaPipeHandAdapter()
-detector = RelativeDistanceExtensionDetector(0.25)
+
+# Initial detector value
+initial_threshold = 0.18
+detector = AbsoluteDistanceExtensionDetector(initial_threshold)
 engine = BinaryCounterEngine(adapter, detector)
 
+cv2.namedWindow("Hand Binary Counter")
+cv2.createTrackbar(
+    "Threshold", "Hand Binary Counter", int(initial_threshold * 100), 100, nothing
+)
 
 while capture.isOpened():
     ret, frame = capture.read()
+    if not ret:
+        break
+
+    # Get slider value
+    threshold = cv2.getTrackbarPos("Threshold", "Hand Binary Counter") / 100.0
+
+    # Recreate detector with the updated threshold
+    engine.detector = AbsoluteDistanceExtensionDetector(threshold)
 
     image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
@@ -34,12 +53,10 @@ while capture.isOpened():
 
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-    # Drawing Right hand Land Marks
     mp_drawing.draw_landmarks(
         image, results.right_hand_landmarks, mp_holistic.HAND_CONNECTIONS
     )
 
-    # Drawing Left hand Land Marks
     mp_drawing.draw_landmarks(
         image, results.left_hand_landmarks, mp_holistic.HAND_CONNECTIONS
     )
@@ -54,7 +71,20 @@ while capture.isOpened():
         2,
     )
 
+    cv2.putText(
+        image,
+        f"Threshold: {threshold:.2f}",
+        (10, 70),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.7,
+        RED_COLOR,
+        2,
+    )
+
     cv2.imshow("Hand Binary Counter", image)
 
     if cv2.waitKey(1) & 0xFF == ord("q"):
         break
+
+capture.release()
+cv2.destroyAllWindows()
