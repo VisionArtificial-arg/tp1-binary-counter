@@ -17,7 +17,7 @@ RED_COLOR = (0, 0, 255)
 capture = cv2.VideoCapture(0)
 
 adapter = MediaPipeHandAdapter()
-detector = RelativeDistanceExtensionDetector(0.30)
+detector = RelativeDistanceExtensionDetector(0.25)
 engine = BinaryCounterEngine(adapter, detector)
 
 
